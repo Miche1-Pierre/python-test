@@ -21,3 +21,12 @@ jobs:
     # Étape d'exécution des tests DANS l'image construite
     - name: Run tests inside Docker image
       run: docker run --rm myapp-ci:${{ github.sha }} pytest
+
+    - name: Login Docker
+      run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+    - name: Tag
+      run: docker tag myapp-ci:${{ github.sha }} $DOCKER_USERNAME/myapp-ci:stable
+
+    - name: Push
+      run: docker push $DOCKER_USERNAME/myapp-ci:stable
